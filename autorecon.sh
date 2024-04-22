@@ -14,6 +14,7 @@ if [[ $inurl =~ \.(com|net|org|co\.il)$ ]] && [ ! -d "$inurl" ]; then
 
 else 
 	echo "$inurl is not a valid input."
+	exit 1
 fi
 
 
@@ -27,14 +28,27 @@ if command -v sublist3r >/dev/null 2>&1; then
 	echo "Sublist3r is installed."
 else
 	echo "Sublist3r is not installed. Please install it to use this script"
-	exit
+	exit 1
 fi
 
+if ! command -v assetfinder >/dev/null 2>&1; then 
+    echo "Assetfinder is not installed. Please install it to use this script"
+    exit 1
+fi
 cd $inurl/recon
 
-echo "Starting  to passivly enumerate Subdomains for $inurl"
-sublist3r -d $inurl -o  temp_subdomains.txt > /dev/null
+echo "Starting  to passivly enumerate Subdomains for $inurl with Sublist3r..."
+sublist3r -d $inurl -o  sublist3r.txt > /dev/null
 echo "done!"
 
-cat temp_subdomains.txt | sort | uniq >> subdomains
-echo "Subdomains saved to subdomains.txt"
+echo  "Starting to passivly enumerate Subdomains for $inurl with Amass..."
+amass enum -d $inurl >> Amass.txt
+echo "done!"
+
+echo " Starting to passivly enumaerate for $inurl with Assetfinder..."
+assetfinder --subs-only $inurl >> assetfinder.txt
+echo "job done!"
+
+
+cat sublist3r.txt Amass.txt assetfinder.txt | sort -u > subdomains.txt
+cat subsomains.txt
