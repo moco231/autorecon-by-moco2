@@ -58,6 +58,7 @@ read inprobe
 if [ "$inprobe" = "y" ]; then
     echo "Probing process begins. Please wait..."
     cat subdomains.txt | httprobe | sort |  uniq >>  httprobe.txt
+    cat httprobe.txt
 else
     echo "Exiting program."
     exit 1
