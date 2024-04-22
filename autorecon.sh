@@ -52,12 +52,13 @@ echo "job done!"
 
 cat sublist3r.txt Amass.txt assetfinder.txt | sort -u > subdomains.txt
 
-echo "Do you want me to activly use httprobe and probe the servers? press type y/n for yes or no:"
+echo "Do you want to start the probing process? (y/n)"
+read inprobe
 
-read $inprobe
-if [ $inprobe -eq "y" ];  then
-	echo "probing process begins please wait..."
-	cat subdomains.txt | httprobe
+if [ "$inprobe" = "y" ]; then
+    echo "Probing process begins. Please wait..."
+    cat subdomains.txt | httprobe
 else
-	echo "exsiting program."
-	exit 1 
+    echo "Exiting program."
+    exit 1
+fi
